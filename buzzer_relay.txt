@@ -1,0 +1,59 @@
+#include<PIC18F4550.h>
+
+void delay()
+{
+	unsigned int i;
+	for(i=0;i<30000;i++);
+}
+
+void main()
+{
+    unsigned char i, key = 0;
+
+    TRISB = 0x00;                           //LED pins as output
+    LATB = 0x00;
+
+    ADCON1 = 0x0F;                          //set pins as Digital
+    TRISAbits.TRISA2 = 1;                   //set RA2 as input
+    TRISAbits.TRISA3 = 1;                   //set RA31 as input
+
+    TRISAbits.TRISA5 = 0;                   //set buzzer pin RA5 as output
+    TRISAbits.TRISA4 = 0;                   //set relay pin RA4 as output
+    
+    while(1)
+    {
+        //LATAbits.LA2 = 1;
+        //LATAbits.LA3 = 1;
+
+        if(PORTAbits.RA2 == 0) key =0;      //If button1 pressed
+        if(PORTAbits.RA3 == 0) key =1;      //If button2 pressed
+
+        if(key == 0)
+        {
+            LATAbits.LATA4 = 1;             //Relay OFF
+            LATAbits.LATA5 = 0;             //Buzzer OFF
+            for(i=0;i<8;i++)                //Chase LED right to left
+            {
+                LATB = 1<<i;
+                delay();
+                LATB = 0x00;
+                delay();
+            }
+        }
+        if(key == 1)
+        {
+            LATAbits.LATA4 = 0;             //Relay ON
+            LATAbits.LATA5 = 1;             //Buzzer ON
+            for(i=7;i> 0;i--)               //Chase LED left to right
+            {
+                LATB = 1<<i;
+                delay();
+                LATB = 0x00;
+                delay();
+            }
+        }
+        
+    }
+}
+
+
