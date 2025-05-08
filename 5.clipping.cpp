@@ -1,6 +1,5 @@
 #include <iostream>
 #include <GL/glut.h>
-//Abhishek Bhabad SIT20
 using namespace std;
 
 const int MAX_POINTS = 20;
